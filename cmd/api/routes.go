@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// routes returns a http.Handler containing all the routes for the application.
 func (app *application) routes() http.Handler {
 	// create a router mux
 
