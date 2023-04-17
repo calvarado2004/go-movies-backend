@@ -7,12 +7,20 @@ import (
 	"time"
 )
 
+// PostgresDBRepo is a wrapper around the database connection pool.
 type PostgresDBRepo struct {
 	DB *sql.DB
 }
 
+// dbTimeout is the maximum amount of time a database operation can take.
 const dbTimeout = time.Second * 5
 
+// Connection returns the database connection pool.
+func (m *PostgresDBRepo) Connection() *sql.DB {
+	return m.DB
+}
+
+// AllMovies returns all movies from the database.
 func (m *PostgresDBRepo) AllMovies() ([]*models.Movie, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)

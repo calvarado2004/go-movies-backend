@@ -8,7 +8,7 @@ import (
 	"log"
 )
 
-// openDB opens a connection to the database and returns a sql.DB instance for
+// openDB opens a connection to the database and returns a sql.DB instance for use by the application.
 func openDB(dsn string) (*sql.DB, error) {
 
 	db, err := sql.Open("pgx", dsn)
@@ -24,6 +24,7 @@ func openDB(dsn string) (*sql.DB, error) {
 	return db, nil
 }
 
+// connectToDB connects to the database and returns a sql.DB instance for use by the application.
 func (app *application) connectToDB() (*sql.DB, error) {
 	connection, err := openDB(app.DSN)
 	if err != nil {
