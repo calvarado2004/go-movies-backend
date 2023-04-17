@@ -5,10 +5,10 @@ import (
 	"net/http"
 )
 
-// Hello is a simple handler function which writes a response.
-func Hello(w http.ResponseWriter, r *http.Request) {
+// Home is a simple handler function which writes a response.
+func (app *application) Home(w http.ResponseWriter, r *http.Request) {
 
-	_, err := fmt.Fprint(w, "Hello, World!")
+	_, err := fmt.Fprintf(w, "Hello, World! from %s", app.Domain)
 	if err != nil {
 		return
 	}
