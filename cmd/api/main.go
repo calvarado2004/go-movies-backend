@@ -34,7 +34,16 @@ func main() {
 
 	app.DB = conn
 
+	defer func(DB *sql.DB) {
+		err := DB.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(app.DB)
+
 	app.Domain = "example.com"
+
+	log.Println(fmt.Sprintf("Starting server on port %d", port))
 
 	// start a web server
 	err = http.ListenAndServe(fmt.Sprintf(":%d", port), app.routes())
