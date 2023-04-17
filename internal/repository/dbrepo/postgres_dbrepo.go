@@ -29,7 +29,7 @@ func (m *PostgresDBRepo) AllMovies() ([]*models.Movie, error) {
 	var movies []*models.Movie
 
 	query := `SELECT 
-    	id, title, release_date, runtime, mpaa_rating, description, genre, coalesce(image, ''), created_at, updated_at 
+    	id, title, release_date, runtime, mpaa_rating, description, coalesce(image, ''), created_at, updated_at 
 	FROM 
 	    movies 
 	ORDER BY 
@@ -57,7 +57,6 @@ func (m *PostgresDBRepo) AllMovies() ([]*models.Movie, error) {
 			&movie.Runtime,
 			&movie.MPAARating,
 			&movie.Description,
-			&movie.Genre,
 			&movie.Image,
 			&movie.CreatedAt,
 			&movie.UpdatedAt,
