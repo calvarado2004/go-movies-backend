@@ -63,7 +63,7 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, data an
 	return nil
 }
 
-func (app *application) errorJSON(w http.ResponseWriter, r *http.Request, err error, status ...int) error {
+func (app *application) errorJSON(w http.ResponseWriter, err error, status ...int) error {
 
 	statusCode := http.StatusBadRequest
 

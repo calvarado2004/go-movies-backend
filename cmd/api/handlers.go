@@ -32,7 +32,10 @@ func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
 	// get all movies from the database
 	movies, err := app.DB.AllMovies()
 	if err != nil {
-		fmt.Println(err)
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
 		return
 	}
 
@@ -41,5 +44,5 @@ func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-	
+
 }
