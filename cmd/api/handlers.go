@@ -77,6 +77,9 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// check password
+	valid, err := user.PasswordMatches(requestPayload.Password)
+
 	// generate token pair
 	u := jwtUser{
 		ID:        1,

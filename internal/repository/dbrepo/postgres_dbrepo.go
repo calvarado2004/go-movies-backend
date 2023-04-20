@@ -71,7 +71,7 @@ func (m *PostgresDBRepo) AllMovies() ([]*models.Movie, error) {
 }
 
 // GetUserByEmail returns a user from the database by email.
-func (m *PostgresDBRepo) GetUserByEmail(email string) ([]*models.User, error) {
+func (m *PostgresDBRepo) GetUserByEmail(email string) ([]models.User, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
@@ -95,5 +95,5 @@ func (m *PostgresDBRepo) GetUserByEmail(email string) ([]*models.User, error) {
 		return nil, err
 	}
 
-	return []*models.User{&user}, nil
+	return []models.User{user}, nil
 }
