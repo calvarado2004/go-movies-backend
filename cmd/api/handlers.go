@@ -71,6 +71,9 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println(tokens.AccessToken)
 
+	refreshCookie := app.auth.getRefreshCookie(tokens.RefreshToken)
+	http.SetCookie(w, refreshCookie)
+
 	// write json response
 	_, err = w.Write([]byte(tokens.AccessToken))
 	if err != nil {
