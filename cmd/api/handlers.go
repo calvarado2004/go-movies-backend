@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -79,12 +78,19 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 
 	// check password
 	valid, err := user.PasswordMatches(requestPayload.Password)
+	if err != nil || !valid {
+		err := app.errorJSON(w, errors.New("invalid credentials"), http.StatusBadRequest)
+		if err != nil {
+			return
+		}
+		return
+	}
 
 	// generate token pair
 	u := jwtUser{
-		ID:        1,
-		FirstName: "Admin",
-		LastName:  "User",
+		ID:        user.ID,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
 	}
 
 	tokens, err := app.auth.generateTokenPair(&u)
@@ -96,7 +102,6 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
-	log.Println(tokens.AccessToken)
 
 	refreshCookie := app.auth.getRefreshCookie(tokens.RefreshToken)
 	http.SetCookie(w, refreshCookie)
