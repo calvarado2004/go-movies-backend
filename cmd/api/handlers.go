@@ -107,7 +107,7 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, refreshCookie)
 
 	// write json response
-	_, err = w.Write([]byte(tokens.AccessToken))
+	err = app.writeJSON(w, http.StatusAccepted, tokens, nil)
 	if err != nil {
 		return
 	}
