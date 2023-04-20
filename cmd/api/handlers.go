@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -48,6 +49,7 @@ func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// authenticate is a simple handler function which writes a response.
 func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 	// read json payload
 
@@ -64,8 +66,16 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	
+
 	// validate payload, user exists, password matches
+	user, err := app.DB.GetUserByEmail(requestPayload.Email)
+	if err != nil {
+		err := app.errorJSON(w, errors.New("invalid credentials"), http.StatusBadRequest)
+		if err != nil {
+			return
+		}
+		return
+	}
 
 	// generate token pair
 	u := jwtUser{
