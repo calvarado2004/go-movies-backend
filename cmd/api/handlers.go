@@ -51,6 +51,20 @@ func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
 func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 	// read json payload
 
+	var requestPayload struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	err := app.readJSON(w, r, &requestPayload)
+	if err != nil {
+		err := app.errorJSON(w, err, http.StatusBadRequest)
+		if err != nil {
+			return
+		}
+		return
+	}
+	
 	// validate payload, user exists, password matches
 
 	// generate token pair
