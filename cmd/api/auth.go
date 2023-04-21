@@ -101,7 +101,7 @@ func (j *Auth) getRefreshCookie(refreshToken string) *http.Cookie {
 }
 
 // getExpiredRefreshCookie generates a new refresh cookie with an expired time.
-func (j *Auth) getExpiredRefreshCookie(refreshToken string) *http.Cookie {
+func (j *Auth) getExpiredRefreshCookie() *http.Cookie {
 	return &http.Cookie{
 		Name:     j.CookieName,
 		Value:    "",

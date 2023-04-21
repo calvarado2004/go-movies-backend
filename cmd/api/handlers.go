@@ -185,3 +185,9 @@ func (app *application) refreshToken(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
+// logout is a simple handler function which writes a response.
+func (app *application) logout(w http.ResponseWriter, r *http.Request) {
+	http.SetCookie(w, app.auth.getExpiredRefreshCookie())
+	w.WriteHeader(http.StatusAccepted)
+}
