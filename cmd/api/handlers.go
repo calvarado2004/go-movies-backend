@@ -238,3 +238,7 @@ func (j *Auth) getTokenFromHeaderAndVerify(w http.ResponseWriter, r *http.Reques
 	return token[1], claims, nil
 
 }
+
+func (app *application) movieCatalog(w http.ResponseWriter, r *http.Request) {
+
+}
