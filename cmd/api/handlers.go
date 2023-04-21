@@ -239,6 +239,22 @@ func (j *Auth) getTokenFromHeaderAndVerify(w http.ResponseWriter, r *http.Reques
 
 }
 
+// movieCatalog is a simple handler function which writes a response.
 func (app *application) movieCatalog(w http.ResponseWriter, r *http.Request) {
 
+	// get all movies from the database
+	movies, err := app.DB.AllMovies()
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, movies, nil)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
