@@ -13,6 +13,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // Home is a simple handler function which writes a response.
@@ -363,6 +364,10 @@ func (app *application) insertMovie(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// try to grab an image
+	movie = app.getPoster(movie)
+
+	movie.CreatedAt = time.Now()
+	movie.UpdatedAt = time.Now()
 
 	// now handle genres
 
@@ -390,6 +395,7 @@ func (app *application) getPoster(movie models.Movie) models.Movie {
 	}
 
 	// get poster from the movie db
+	// https://api.themoviedb.org/3/search/movie?api_key=b2225620f919fd84111a706e2dc5d872&query=Die+Hard
 	client := &http.Client{}
 
 	theURL := fmt.Sprintf("https://api.themoviedb.org/3/search/movie?api_key=%s", app.APIKey)
