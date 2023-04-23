@@ -283,3 +283,41 @@ func (m *PostgresDBRepo) GetUserByID(id int) (models.User, error) {
 
 	return user, nil
 }
+
+// AllGenresDB returns all genres from the database.
+func (m *PostgresDBRepo) AllGenresDB() ([]*models.Genre, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	query := `SELECT id, genre, created_at, updated_at FROM genres order by genre`
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+
+		}
+	}(rows)
+
+	var genres []*models.Genre
+
+	for rows.Next() {
+		var genre models.Genre
+		err := rows.Scan(
+			&genre.ID,
+			&genre.Genre,
+			&genre.CreatedAt,
+			&genre.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		genres = append(genres, &genre)
+	}
+
+	return genres, nil
+}

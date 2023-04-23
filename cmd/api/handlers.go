@@ -325,3 +325,21 @@ func (app *application) movieForEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// allGenres is a simple handler function which writes a response to retrieve all genres.
+func (app *application) allGenres(w http.ResponseWriter, r *http.Request) {
+
+	genres, err := app.DB.AllGenresDB()
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, genres, nil)
+	if err != nil {
+		return
+	}
+}
