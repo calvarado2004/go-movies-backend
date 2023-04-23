@@ -459,3 +459,63 @@ func (app *application) getPoster(movie models.Movie) models.Movie {
 
 	return movie
 }
+
+// updateMovie handler to update a movie
+func (app *application) updateMovie(w http.ResponseWriter, r *http.Request) {
+
+	var payload models.Movie
+
+	err := app.readJSON(w, r, &payload)
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	movie, err := app.DB.OneMovie(payload.ID)
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	movie.Title = payload.Title
+	movie.ReleaseDate = payload.ReleaseDate
+	movie.Description = payload.Description
+	movie.Runtime = payload.Runtime
+	movie.MPAARating = payload.MPAARating
+	movie.UpdatedAt = time.Now()
+
+	err = app.DB.UpdateMovie(*movie)
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	err = app.DB.UpdateMovieGenres(movie.ID, payload.GenresArray)
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	response := JSONResponse{
+		Error:   false,
+		Message: "movie updated successfully",
+	}
+
+	err = app.writeJSON(w, http.StatusAccepted, response, nil)
+	if err != nil {
+		return
+	}
+
+}
