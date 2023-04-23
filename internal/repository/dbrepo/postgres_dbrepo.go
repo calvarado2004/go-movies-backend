@@ -321,3 +321,30 @@ func (m *PostgresDBRepo) AllGenresDB() ([]*models.Genre, error) {
 
 	return genres, nil
 }
+
+// InsertMovie inserts a movie into the database.
+func (m *PostgresDBRepo) InsertMovie(movie models.Movie) (int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	stmt := `INSERT INTO movies (title, description, release_date, runtime,  mpaa_rating, created_at, updated_at, image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`
+
+	var newID int
+
+	err := m.DB.QueryRowContext(
+		ctx,
+		stmt,
+		movie.Title,
+		movie.Description,
+		movie.ReleaseDate,
+		movie.Runtime,
+		movie.MPAARating,
+		movie.CreatedAt,
+		movie.UpdatedAt,
+		movie.Image).Scan(&newID)
+	if err != nil {
+		return 0, err
+	}
+
+	return newID, nil
+}

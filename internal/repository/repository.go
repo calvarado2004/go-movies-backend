@@ -14,4 +14,5 @@ type DatabaseRepo interface {
 	GetUserByEmail(email string) (models.User, error)
 	GetUserByID(id int) (models.User, error)
 	AllGenresDB() ([]*models.Genre, error)
+	InsertMovie(movie models.Movie) (int, error)
 }
