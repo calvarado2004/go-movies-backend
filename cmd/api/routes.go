@@ -31,6 +31,7 @@ func (app *application) routes() http.Handler {
 		authMux.Use(app.authRequired)
 		authMux.Get("/movies", app.movieCatalog)
 		authMux.Get("/movies/{id}", app.movieForEdit)
+		authMux.Put("/movies/0", app.insertMovie)
 	})
 
 	return mux

@@ -343,3 +343,33 @@ func (app *application) allGenres(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// insertMovie handler to insert a new movie
+func (app *application) insertMovie(w http.ResponseWriter, r *http.Request) {
+
+	var movie models.Movie
+
+	err := app.readJSON(w, r, &movie)
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	// try to grab an image
+
+	// now handle genres
+
+	response := JSONResponse{
+		Error:   false,
+		Message: "Movie inserted successfully",
+	}
+
+	err = app.writeJSON(w, http.StatusAccepted, response, nil)
+	if err != nil {
+		return
+	}
+
+}
