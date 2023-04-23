@@ -162,7 +162,7 @@ func (m *PostgresDBRepo) OneMovieForEdit(id int) (*models.Movie, []*models.Genre
 
 	// get genres for this movie
 
-	query = `SELECT g.id, g.genre from movies_genres mg left join (mg.genres g on g.id = mg.genre_id) where mg.movie_id = $1 order by g.genre`
+	query = `SELECT g.id, g.genre from movies_genres mg, genres g where movie_id = $1 and g.id = mg.genre_id`
 
 	rows, err := m.DB.QueryContext(ctx, query, id)
 	if err != nil && err != sql.ErrNoRows {
