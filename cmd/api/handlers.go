@@ -1,12 +1,16 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/calvarado2004/go-movies-backend/internal/models"
 	"github.com/go-chi/chi/v5"
 	"github.com/golang-jwt/jwt/v4"
+	"io"
+	"log"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 )
@@ -372,4 +376,63 @@ func (app *application) insertMovie(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+// getPoster gets the poster from the movie db api and returns the movie
+func (app *application) getPoster(movie models.Movie) models.Movie {
+
+	type TheMovieDB struct {
+		Page    int `json:"page"`
+		Results []struct {
+			PosterPath string `json:"poster_path"`
+		} `json:"results"`
+		TotalPages int `json:"total_pages"`
+	}
+
+	// get poster from the movie db
+	client := &http.Client{}
+
+	theURL := fmt.Sprintf("https://api.themoviedb.org/3/search/movie?api_key=%s", app.APIKey)
+
+	req, err := http.NewRequest("GET", theURL+"&query="+url.QueryEscape(movie.Title), nil)
+	if err != nil {
+		log.Println("movie not found on the movie db", err)
+		return movie
+	}
+
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("movie not found on the movie db", err)
+		return movie
+	}
+
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Println("error closing body", err)
+		}
+	}(resp.Body)
+
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("error reading body", err)
+		return movie
+	}
+
+	var responseMovie TheMovieDB
+
+	err = json.Unmarshal(bodyBytes, &responseMovie)
+	if err != nil {
+		log.Println("error unmarshalling json", err)
+		return movie
+	}
+
+	if len(responseMovie.Results) > 0 {
+		movie.Image = responseMovie.Results[0].PosterPath
+	}
+
+	return movie
 }
