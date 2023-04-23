@@ -3,6 +3,8 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/calvarado2004/go-movies-backend/internal/models"
+	"github.com/go-chi/chi/v5"
 	"github.com/golang-jwt/jwt/v4"
 	"net/http"
 	"strconv"
@@ -255,6 +257,71 @@ func (app *application) movieCatalog(w http.ResponseWriter, r *http.Request) {
 	err = app.writeJSON(w, http.StatusOK, movies, nil)
 	if err != nil {
 		fmt.Println(err)
+		return
+	}
+}
+
+// getMovie is a simple handler function which writes a response to retrieve a movie.
+func (app *application) getMovie(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	movieID, err := strconv.Atoi(id)
+	if err != nil {
+		err := app.errorJSON(w, errors.New("invalid id parameter"), http.StatusBadRequest)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	movie, err := app.DB.OneMovie(movieID)
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, movie, nil)
+	if err != nil {
+		return
+	}
+
+}
+
+// movieForEdit is a simple handler function which writes a response to edit a movie.
+func (app *application) movieForEdit(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	movieID, err := strconv.Atoi(id)
+	if err != nil {
+		err := app.errorJSON(w, errors.New("invalid id parameter"), http.StatusBadRequest)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	movie, genres, err := app.DB.OneMovieForEdit(movieID)
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	var payload = struct {
+		Movie  *models.Movie   `json:"movie"`
+		Genres []*models.Genre `json:"genres"`
+	}{
+		Movie:  movie,
+		Genres: genres,
+	}
+
+	err = app.writeJSON(w, http.StatusOK, payload, nil)
+	if err != nil {
 		return
 	}
 }
