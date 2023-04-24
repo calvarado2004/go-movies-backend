@@ -396,3 +396,18 @@ func (m *PostgresDBRepo) UpdateMovieGenres(id int, genreIDs []int) error {
 
 	return nil
 }
+
+// DeleteMovie deletes a movie from the database. Genres are not needed to be deleted.
+func (m *PostgresDBRepo) DeleteMovie(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	stmt := `DELETE FROM movies WHERE id = $1`
+
+	_, err := m.DB.ExecContext(ctx, stmt, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
