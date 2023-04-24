@@ -519,3 +519,36 @@ func (app *application) updateMovie(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+// deleteMovie handler to delete a movie
+func (app *application) deleteMovie(w http.ResponseWriter, r *http.Request) {
+
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	err = app.DB.DeleteMovie(id)
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	response := JSONResponse{
+		Error:   false,
+		Message: "movie deleted successfully",
+	}
+
+	err = app.writeJSON(w, http.StatusAccepted, response, nil)
+	if err != nil {
+		return
+	}
+
+}
