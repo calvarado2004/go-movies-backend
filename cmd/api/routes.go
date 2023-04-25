@@ -26,6 +26,7 @@ func (app *application) routes() http.Handler {
 	mux.Get("/refresh", app.refreshToken)
 	mux.Get("/logout", app.logout)
 	mux.Get("/genres", app.allGenres)
+	mux.Get("/movies/genres/{id}", app.AllMoviesByGenre)
 
 	mux.Route("/admin", func(authMux chi.Router) {
 		authMux.Use(app.authRequired)
@@ -34,6 +35,7 @@ func (app *application) routes() http.Handler {
 		authMux.Put("/movies/0", app.insertMovie)
 		authMux.Patch("/movies/{id}", app.updateMovie)
 		authMux.Delete("/movies/{id}", app.deleteMovie)
+
 	})
 
 	return mux

@@ -552,3 +552,31 @@ func (app *application) deleteMovie(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+// AllMoviesByGenre handler to get all movies by genre
+func (app *application) AllMoviesByGenre(w http.ResponseWriter, r *http.Request) {
+
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	movies, err := app.DB.AllMovies(id)
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, movies, nil)
+	if err != nil {
+		return
+	}
+
+}
