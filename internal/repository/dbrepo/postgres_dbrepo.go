@@ -3,6 +3,7 @@ package dbrepo
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"github.com/calvarado2004/go-movies-backend/internal/models"
 	"time"
 )
@@ -21,19 +22,25 @@ func (m *PostgresDBRepo) Connection() *sql.DB {
 }
 
 // AllMovies returns all movies from the database.
-func (m *PostgresDBRepo) AllMovies() ([]*models.Movie, error) {
+func (m *PostgresDBRepo) AllMovies(genre ...int) ([]*models.Movie, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
+	// if a genre ID was provided, only return movies for that genre
+	where := ""
+	if len(genre) > 0 {
+		where = fmt.Sprintf("WHERE id IN (SELECT movie_id FROM movies_genres WHERE genre_id = %d)", genre[0])
+	}
+
 	var movies []*models.Movie
 
-	query := `SELECT 
+	query := fmt.Sprintf(`SELECT 
     	id, title, release_date, runtime, mpaa_rating, description, coalesce(image, ''), created_at, updated_at 
 	FROM 
-	    movies 
+	    movies %s
 	ORDER BY 
-	    title DESC`
+	    title DESC`, where)
 
 	rows, err := m.DB.QueryContext(ctx, query)
 	if err != nil {
