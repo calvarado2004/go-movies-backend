@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/calvarado2004/go-movies-backend/internal/graph"
 	"github.com/calvarado2004/go-movies-backend/internal/models"
 	"github.com/go-chi/chi/v5"
 	"github.com/golang-jwt/jwt/v4"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -578,5 +580,49 @@ func (app *application) AllMoviesByGenre(w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		return
 	}
+
+}
+
+// moviesGraphQL handler to get all movies by genre
+func (app *application) moviesGraphQL(w http.ResponseWriter, r *http.Request) {
+
+	// populate graphql type with movies
+	movies, err := app.DB.AllMovies()
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	// get query from request
+	q, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	query := string(q)
+
+	// create a variable of type *graph.Graph
+	g := graph.NewGraph(movies)
+	g.QueryString = query
+
+	// execute query
+	resp, err := g.Query()
+	if err != nil {
+		err := app.errorJSON(w, err)
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	// write response
+	err = app.writeJSON(w, http.StatusOK, resp, nil)
 
 }
