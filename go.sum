@@ -15,6 +15,12 @@ github.com/gofrs/uuid v4.0.0+incompatible/go.mod h1:b2aQJv3Z4Fp6yNu3cdSllBxTCLRx
 github.com/golang-jwt/jwt/v4 v4.5.0 h1:7cYmW1XlMY7h7ii7UhUyChSgS5wUJEnm9uZVTGqOWzg=
 github.com/golang-jwt/jwt/v4 v4.5.0/go.mod h1:m21LjoU+eqJr34lmDMbreY2eSTRJ1cv77w39/MY0Ch0=
 github.com/google/renameio v0.1.0/go.mod h1:KWCgfxg9yswjAJkECMjeO8J8rahYeXnNhOm40UhjYkI=
+github.com/graphql-go/graphql v0.8.1 h1:p7/Ou/WpmulocJeEx7wjQy611rtXGQaAcXGqanuMMgc=
+github.com/graphql-go/graphql v0.8.1/go.mod h1:nKiHzRM0qopJEwCITUuIsxk9PlVlwIiiI8pnJEhordQ=
+github.com/graphql/graphiql v2.0.1+incompatible h1:ygD/QkcWqMjzXQ5hDtTmTl5I2Z3tkCVuQf9rCogBrBM=
+github.com/graphql/graphiql v2.0.1+incompatible/go.mod h1:nc9eAext5rHwc3GYoLO7HVFczS+/V3HG/1nH28FjNkU=
+github.com/graphql/graphql v0.0.0-20230211002012-afc0a35d271b h1:0QFX+Ev7T0OytEa5uIbuiLkHUZTbRacXjdzZ8n3JVrQ=
+github.com/graphql/graphql v0.0.0-20230211002012-afc0a35d271b/go.mod h1:lDtyvHm2eJ7ULqhhdOAEs7PfiDkOPBtqZMlf6s5lao0=
 github.com/jackc/chunkreader v1.0.0 h1:4s39bBR8ByfqH+DKm8rQA3E1LHZWB9XWcrz8fqaZbe0=
 github.com/jackc/chunkreader v1.0.0/go.mod h1:RT6O25fNZIuasFJRyZ4R/Y2BbhasbmZXF9QQ7T3kePo=
 github.com/jackc/chunkreader/v2 v2.0.0/go.mod h1:odVSm741yZoC3dpHEUXIqA9tQRhFrgOHwnPIn9lDKlk=
