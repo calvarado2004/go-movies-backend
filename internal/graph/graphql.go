@@ -1,6 +1,7 @@
 package graph
 
 import (
+	"errors"
 	"github.com/calvarado2004/go-movies-backend/internal/models"
 	"github.com/graphql-go/graphql"
 	"strings"
@@ -14,6 +15,7 @@ type Graph struct {
 	movieType   *graphql.Object
 }
 
+// NewGraph creates a new Graphql object with the given movies
 func NewGraph(movies []*models.Movie) *Graph {
 
 	var movieType = graphql.NewObject(
@@ -114,4 +116,23 @@ func NewGraph(movies []*models.Movie) *Graph {
 		fields:    fields,
 		movieType: movieType,
 	}
+}
+
+// Query executes the given query string against the Graphql object
+func (g *Graph) Query() (*graphql.Result, error) {
+
+	rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: g.fields}
+	schemaConfig := graphql.SchemaConfig{Query: graphql.NewObject(rootQuery)}
+	schema, err := graphql.NewSchema(schemaConfig)
+	if err != nil {
+		return nil, err
+	}
+	params := graphql.Params{Schema: schema, RequestString: g.QueryString}
+	result := graphql.Do(params)
+	if len(result.Errors) > 0 {
+		return nil, errors.New("error parsing GraphQL query: " + result.Errors[0].Message + " " + g.QueryString)
+	}
+
+	return result, nil
+
 }
