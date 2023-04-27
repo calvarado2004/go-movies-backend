@@ -1,14 +1,17 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+	"os"
+)
 
 // enableCORS is a middleware function that adds the appropriate CORS headers to the response.
 func (app *application) enableCORS(h http.Handler) http.Handler {
 
+	corsDomain := os.Getenv("FRONTEND_MOVIES")
+
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "https://node-react-movies.apps.okd.calvarado04.com")
-		w.Header().Set("Access-Control-Allow-Origin", "https://node-react-svc:3000")
-		w.Header().Set("Access-Control-Allow-Origin", "https://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Origin", corsDomain)
 
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 

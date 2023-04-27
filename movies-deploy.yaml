@@ -31,3 +31,5 @@ spec:
             value: postgres
           - name: API_MOVIES_KEY
             value: "b2225620f919fd84111a706e2dc5d872"
+          - name: FRONTEND_MOVIES
+            value: "https://node-react-movies.apps.okd.calvarado04.com"
