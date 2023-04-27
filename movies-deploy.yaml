@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golang-movies
+  namespace: movies
+spec:
+  selector:
+    matchLabels:
+      app: golang-movies
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: golang-movies
+    spec:
+      containers:
+        - name: golang-movies
+          image: calvarado2004/golang-movies:latest
+          ports:
+            - containerPort: 8080
+          env:
+          - name: DB_SERVER
+            value: "postgres-movies-svc"
+          - name: DB_PORT
+            value: "5432"
+          - name: DB_USER
+            value: "postgres"
+          - name: DB_NAME
+            value: "movies"
+          - name: DB_PASSWORD         
+            value: postgres
+          - name: API_MOVIES_KEY
+            value: "b2225620f919fd84111a706e2dc5d872"
