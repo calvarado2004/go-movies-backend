@@ -6,7 +6,10 @@ import "net/http"
 func (app *application) enableCORS(h http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Origin", "https://node-react-movies.apps.okd.calvarado04.com")
+		w.Header().Set("Access-Control-Allow-Origin", "https://node-react-svc:3000")
+		w.Header().Set("Access-Control-Allow-Origin", "https://localhost:3000")
+
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 
 		if r.Method == "OPTIONS" {
