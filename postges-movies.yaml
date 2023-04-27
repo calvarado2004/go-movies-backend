@@ -1,0 +1,65 @@
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: postgres-movies
+  namespace: movies
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgres-movies
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: postgres-movies
+    spec:
+      containers:
+        - resources: {}
+          terminationMessagePath: /dev/termination-log
+          name: postgres
+          env:
+            - name: POSTGRES_DB
+              value: movies
+            - name: POSTGRES_USER
+              value: postgres
+            - name: PGDATA
+              value: /var/lib/postgresql/data
+            - name: POSTGRES_PASSWORD
+              value: postgres
+          ports:
+            - name: postgres
+              containerPort: 5432
+              protocol: TCP
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: postgres-pvc
+              mountPath: /var/lib/postgresql/data
+          terminationMessagePolicy: File
+          image: 'postgres:14.5'
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 2000
+        supplementalGroups:
+          - 0
+        fsGroup: 2000
+        fsGroupChangePolicy: OnRootMismatch
+      schedulerName: stork
+  volumeClaimTemplates:
+    - kind: PersistentVolumeClaim
+      apiVersion: v1
+      metadata:
+        name: postgres-pvc
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 3Gi
+        storageClassName: portworx-db-sc
+        volumeMode: Filesystem
+  serviceName: postgres-svc
+
+
