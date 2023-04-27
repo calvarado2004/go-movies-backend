@@ -6,8 +6,6 @@ require (
 	github.com/go-chi/chi/v5 v5.0.8 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/graphql-go/graphql v0.8.1 // indirect
-	github.com/graphql/graphiql v2.0.1+incompatible // indirect
-	github.com/graphql/graphql v0.0.0-20230211002012-afc0a35d271b // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.14.0 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect

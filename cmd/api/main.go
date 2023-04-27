@@ -8,6 +8,7 @@ import (
 	"github.com/calvarado2004/go-movies-backend/internal/repository/dbrepo"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -30,14 +31,24 @@ func main() {
 	// set application config
 	var app application
 
+	dbServer := os.Getenv("DB_SERVER")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+
+	dsnVariable := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable timezone=UTC connect_timeout=5", dbServer, dbPort, dbUser, dbPassword, dbName)
+
+	apiMoviesKey := os.Getenv("API_MOVIES_KEY")
+
 	// read from command line
-	flag.StringVar(&app.DSN, "dsn", "host=localhost port=5432 user=postgres password=postgres dbname=movies sslmode=disable timezone=UTC connect_timeout=5", "PostgreSQL DSN")
+	flag.StringVar(&app.DSN, "dsn", dsnVariable, "PostgreSQL DSN")
 	flag.StringVar(&app.JWTSecret, "jwt-secret", "verysecret", "JWT Secret")
-	flag.StringVar(&app.JWTIssuer, "jwt-issuer", "example.com", "JWT Issuer")
-	flag.StringVar(&app.JWTAudience, "jwt-audience", "example.com", "JWT Audience")
-	flag.StringVar(&app.CookieDomain, "cookie-domain", "localhost", "Cookie Domain")
-	flag.StringVar(&app.Domain, "domain", "example.com", "Domain")
-	flag.StringVar(&app.APIKey, "api-key", "b2225620f919fd84111a706e2dc5d872", "API Key")
+	flag.StringVar(&app.JWTIssuer, "jwt-issuer", "api-golang-movies.apps.okd.calvarado04.com", "JWT Issuer")
+	flag.StringVar(&app.JWTAudience, "jwt-audience", "node-react-movies.apps.okd.calvarado04.com", "JWT Audience")
+	flag.StringVar(&app.CookieDomain, "cookie-domain", "apps.okd.calvarado04.com", "Cookie Domain")
+	flag.StringVar(&app.Domain, "domain", "apps.okd.calvarado04.com", "Domain")
+	flag.StringVar(&app.APIKey, "api-key", apiMoviesKey, "API Key")
 
 	flag.Parse()
 
